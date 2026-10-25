@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Memoria · De Figma a Android · Daniel Radulescu</title>
+<style>
+  @font-face { font-family: "Inter"; font-weight: 400; src: url("../app/src/main/res/font/inter_regular.ttf"); }
+  @font-face { font-family: "Inter"; font-weight: 500; src: url("../app/src/main/res/font/inter_medium.ttf"); }
+  @font-face { font-family: "Inter"; font-weight: 600; src: url("../app/src/main/res/font/inter_semibold.ttf"); }
+
+  @page { size: A4; margin: 16mm 17mm 16mm 17mm; }
+  :root { --menta: #BEFBE6; --verde: #AFF4C6; --tinta: #111; --gris: #5b5b5b; --linea: #d9d9d9; }
+  * { box-sizing: border-box; }
+  body { font-family: "Inter", sans-serif; font-size: 9.3pt; line-height: 1.45; color: var(--tinta); margin: 0; }
+  h1 { font-size: 16pt; font-weight: 600; margin: 0 0 1mm; }
+  h2 { font-size: 13pt; font-weight: 600; margin: 0 0 3mm; padding-bottom: 1.5mm; border-bottom: 2px solid var(--verde); }
+  h3 { font-size: 10.5pt; font-weight: 600; margin: 4mm 0 1.5mm; break-after: avoid; }
+  p { margin: 0 0 2mm; }
+  .seccion { break-before: page; }
+  .portada { background: var(--menta); border-radius: 3mm; padding: 4mm 6mm; margin-bottom: 4mm; }
+  .portada .sub { font-size: 10.5pt; font-weight: 500; margin-bottom: 2.5mm; }
+  .datos { display: grid; grid-template-columns: 30mm 1fr; gap: 0.6mm 3mm; }
+  .datos dt { font-weight: 600; }
+  .datos dd { margin: 0; }
+  .datos a { color: inherit; word-break: break-all; font-size: 8pt; }
+  .leyenda { display: flex; gap: 5mm; flex-wrap: wrap; margin: 0 0 3mm; font-size: 8.8pt; }
+  .tag { font-family: Consolas, monospace; font-weight: 700; padding: 0 1mm; border-radius: 1mm; }
+  .np { background: #ececec; } .sup { background: var(--menta); } .rep { background: #ffe1e6; }
+  .dos-col { display: grid; grid-template-columns: 1fr 42mm; gap: 5mm; align-items: start; }
+  pre.arbol { font-family: Consolas, "Courier New", monospace; font-size: 7.5pt; line-height: 1.3; margin: 0;
+              background: #fafafa; border: 1px solid var(--linea); border-radius: 2mm; padding: 3mm 3.5mm; white-space: pre; }
+  figure { margin: 0; text-align: center; }
+  figure img { width: 100%; border: 1px solid var(--linea); border-radius: 2mm; }
+  figcaption { font-size: 8pt; color: var(--gris); margin-top: 1.5mm; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 2mm; font-size: 8.5pt; break-inside: avoid; }
+  th, td { text-align: left; padding: 1.3mm 2mm; border-bottom: 1px solid var(--linea); vertical-align: top; }
+  th { background: #f3f3f3; font-weight: 600; }
+  code { font-family: Consolas, monospace; font-size: 8.4pt; background: #f3f3f3; padding: 0 1mm; border-radius: 1mm; }
+  .muestra { display: inline-block; width: 3.6mm; height: 3.6mm; border-radius: 0.8mm; border: 1px solid #bbb; vertical-align: -0.6mm; margin-right: 1.5mm; }
+  .nota { font-size: 8.6pt; color: var(--gris); }
+  .captura { display: grid; grid-template-columns: 52mm 52mm; gap: 10mm; justify-content: center; margin-top: 4mm; }
+  .reflexion p { margin-bottom: 2.5mm; }
+  .reflexion b { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ============ PRIMERA PÁGINA ============ -->
+<div class="portada">
+  <h1>De Figma a Android · Pantalla «Carrito»</h1>
+  <div class="sub">App «Pequeños Pasos» (tienda de ropa infantil) · PMDM</div>
+  <dl class="datos">
+    <dt>Alumno</dt><dd>Daniel Radulescu</dd>
+    <dt>Prototipo (Figma)</dt><dd><a href="https://www.figma.com/proto/umNYz7ZW0U2snS897ic9yl/T1_Daniel--Copia-?node-id=0-1&amp;t=AVUiACHdUxXQEt5Y-1">https://www.figma.com/proto/umNYz7ZW0U2snS897ic9yl/T1_Daniel--Copia-?node-id=0-1</a></dd>
+    <dt>Archivo (Dev Mode)</dt><dd><a href="https://www.figma.com/design/umNYz7ZW0U2snS897ic9yl/T1_Daniel--Copia-?node-id=0-1&amp;m=dev&amp;t=AVUiACHdUxXQEt5Y-1">https://www.figma.com/design/umNYz7ZW0U2snS897ic9yl/T1_Daniel--Copia-?node-id=0-1&amp;m=dev</a></dd>
+    <dt>Pantalla elegida</dt><dd>4 · Carrito. Tiene iconos (flecha atrás, papelera, barra inferior), una fotografía (camiseta), tres estilos de texto (título, destacado y cuerpo) y un botón (Checkout).</dd>
+    <dt>Proyecto</dt><dd>Java · Empty Views Activity · API mínima 28 · ViewBinding · actividad <code>CarritoActivity</code></dd>
+  </dl>
+</div>
+
+<!-- ============ A1 ============ -->
+<h2>A1 · Análisis del diseño</h2>
+<div class="leyenda">
+  <span><span class="tag np">[NP]</span> no se programa como vista (pasa a ser un atributo o un drawable)</span>
+  <span><span class="tag sup">[SUP]</span> superpuesto a otro elemento</span>
+  <span><span class="tag rep">[REP]</span> se repite</span>
+</div>
+<div class="dos-col">
+<pre class="arbol">4 - Carrito (frame)                    → ConstraintLayout
+├── Barra superior
+│   ├── Flecha atrás                   → ImageButton
+│   └── Cabecera
+│       ├── Rectángulo menta [NP][SUP]  → fondo (drawable)
+│       │   └── Sombra [NP]             → elevation
+│       └── «Carrito» [SUP]             → TextView
+├── Producto del carrito [REP]          → fila de la lista
+│   ├── Foto de la camiseta            → ImageView
+│   │   └── Máscara redondeada [NP]    → forma (shape)
+│   ├── «Camiseta niño»                → TextView
+│   ├── «8,99 €»                       → TextView
+│   ├── «1» (cantidad)                 → TextView
+│   └── Papelera                       → ImageButton
+├── Resumen del pedido
+│   ├── «Resumen del pedido»           → TextView
+│   ├── Fila Subtotal [REP]            → etiqueta + importe
+│   │   ├── «Subtotal»                 → TextView
+│   │   └── «8,99 €»                   → TextView
+│   ├── Fila Envío [REP]               → etiqueta + importe
+│   └── Fila Total [REP]               → etiqueta + importe
+├── Botón Checkout                     → Button (una vista)
+│   ├── Rectángulo verde [NP][SUP]     → backgroundTint + radio
+│   │   └── Sombra [NP]                → elevation
+│   └── «Checkout» [SUP]               → texto del botón
+└── Barra inferior                     → BottomNavigationView
+    ├── Casa (Inicio) [REP]            → elemento del menú
+    ├── Corazón (Favoritos) [REP]      → elemento del menú
+    └── Persona (Perfil) [REP]         → elemento del menú</pre>
+  <figure>
+    <img src="figma_carrito.png" alt="Pantalla Carrito en Figma">
+    <figcaption>Pantalla 4 · Carrito en Figma</figcaption>
+  </figure>
+</div>
+
+<h3>Comparación con el panel de capas</h3>
+<ul style="margin:0 0 2mm; padding-left:5mm">
+  <li><b>Cabecera y botón:</b> en Figma son dos capas (rectángulo + texto) y en Android una sola vista. El rectángulo pasa a ser el fondo, y la sombra, que en Figma es un efecto, pasa a ser <code>elevation</code>.</li>
+  <li><b>Iconos:</b> cada uno es un grupo de vectores en Figma y se convierte en un único VectorDrawable.</li>
+  <li><b>Barra inferior:</b> en Figma son tres capas sueltas; en Android, un <code>BottomNavigationView</code> con un menú de tres elementos.</li>
+  <li><b>Repetición:</b> la fila del producto se repetiría por cada artículo (en el futuro, elemento de una lista) y las tres filas del resumen comparten estructura.</li>
+</ul>
+
+<!-- ============ A3 ============ -->
+<section class="seccion">
+<h2>A3 · Ficha de especificaciones</h2>
+<p>Frame de 393 × 852 px. A 1x, 1 px de Figma equivale a 1 dp en Android, y en los textos a 1 sp.</p>
+
+<h3>Colores</h3>
+<table>
+  <tr><th>Nombre funcional</th><th>Uso</th><th>Figma</th><th>Opacidad</th><th>colors.xml</th></tr>
+  <tr><td><code>color_primario</code></td><td>Fondo del botón Checkout</td><td><span class="muestra" style="background:#AFF4C6"></span>#AFF4C6</td><td>100 %</td><td>#AFF4C6</td></tr>
+  <tr><td><code>color_cabecera</code></td><td>Fondo de la cabecera</td><td><span class="muestra" style="background:#BEFBE6"></span>#BEFBE6</td><td>100 %</td><td>#BEFBE6</td></tr>
+  <tr><td><code>fondo_pantalla</code></td><td>Fondo del frame y de la barra inferior</td><td><span class="muestra" style="background:#FFFFFF"></span>#FFFFFF</td><td>100 %</td><td>#FFFFFF</td></tr>
+  <tr><td><code>texto_principal</code></td><td>Todos los textos</td><td><span class="muestra" style="background:#000000"></span>#000000</td><td>100 %</td><td>#000000</td></tr>
+  <tr><td><code>icono</code></td><td>Flecha atrás y papelera</td><td><span class="muestra" style="background:#1D1B20"></span>#1D1B20</td><td>100 %</td><td>#1D1B20</td></tr>
+  <tr><td><code>icono_navegacion</code></td><td>Iconos de la barra inferior</td><td><span class="muestra" style="background:#1E1E1E"></span>#1E1E1E</td><td>100 %</td><td>#1E1E1E</td></tr>
+  <tr><td><code>sombra</code></td><td>Sombra de la cabecera y del botón</td><td><span class="muestra" style="background:rgba(0,0,0,.25)"></span>#000000</td><td>25 %</td><td><b>#40000000</b></td></tr>
+</table>
+<p class="nota">Conversión de la transparencia: Android usa el formato #AARRGGBB. 25 % → 0,25 × 255 = 63,75 ≈ 64 = 0x40, así que el color queda #40000000.</p>
+
+<h3>Tipografía</h3>
+<p>En el diseño original todos los textos tenían el mismo estilo: Inter Regular, 20 px, interlineado Auto y espaciado 0 %. Para tener jerarquía y cumplir los tres estilos definí estos:</p>
+<table>
+  <tr><th>Estilo (styles.xml)</th><th>Dónde se usa</th><th>Fuente</th><th>Tamaño</th><th>Interlineado</th><th>Espaciado</th></tr>
+  <tr><td><code>Texto.Titulo</code></td><td>«Carrito»</td><td>Inter SemiBold (600)</td><td>24 px → <b>24 sp</b></td><td>Auto 121 % → 24 × 1,21 = 29,04 → <b>29 sp</b></td><td>0 % → 0 em</td></tr>
+  <tr><td><code>Texto.Destacado</code></td><td>«Resumen del pedido», «Total», importe total, «Checkout»</td><td>Inter Medium (500)</td><td>20 px → <b>20 sp</b></td><td>20 × 1,21 = 24,2 → <b>24 sp</b></td><td>0 % → 0 em</td></tr>
+  <tr><td><code>Texto.Cuerpo</code></td><td>Nombre y precio del producto, cantidad, «Subtotal», «Envío» e importes</td><td>Inter Regular (400)</td><td>18 px → <b>18 sp</b></td><td>18 × 1,21 = 21,78 → <b>22 sp</b></td><td>0 % → 0 em</td></tr>
+</table>
+<p class="nota">Los textos van en sp para que respeten el tamaño de letra que elija el usuario. El interlineado Auto de Inter es el 121 % del tamaño; se pasa a sp y se aplica con <code>android:lineHeight</code>, disponible desde la API 28. El espaciado entre letras de Figma (%) se divide entre 100 para obtener em (<code>android:letterSpacing</code>).</p>
+
+<h3>Medidas</h3>
+<table>
+  <tr><th>Elemento</th><th>Figma (px)</th><th>Android</th></tr>
+  <tr><td>Cabecera</td><td>266 × 44, x 64, radio 5</td><td>márgenes laterales 64 dp, alto 44 dp, radio 5 dp</td></tr>
+  <tr><td>Botón Checkout</td><td>266 × 44, x 64, radio 5</td><td>márgenes laterales 64 dp, alto 44 dp, radio 5 dp</td></tr>
+  <tr><td>Sombra (cabecera y botón)</td><td>X 0, Y 4, desenfoque 4, #000000 25 %</td><td><code>elevation</code> 4 dp + color de sombra <code>@color/sombra</code> (API 28)</td></tr>
+  <tr><td>Foto del producto</td><td>78 × 106, x 56, radio 16</td><td>78 × 106 dp, margen inicial 56 dp, esquinas 16 dp</td></tr>
+  <tr><td>Separación foto–texto</td><td>24</td><td>24 dp</td></tr>
+  <tr><td>Resumen del pedido</td><td>margen izquierdo 54, derecho 41</td><td>54 dp / 41 dp</td></tr>
+  <tr><td>Flecha atrás</td><td>30 × 30</td><td>icono de 30 dp dentro de un área táctil de 48 dp</td></tr>
+  <tr><td>Papelera</td><td>24 × 24</td><td>icono de 24 dp dentro de un área táctil de 48 dp</td></tr>
+  <tr><td>Iconos de la barra inferior</td><td>40 × 40</td><td><code>itemIconSize</code> 40 dp</td></tr>
+</table>
+<p class="nota">Las flechas y la papelera miden menos de 48 dp, el mínimo táctil de Android, así que se les añade relleno (padding) para ampliar la zona pulsable. En el diseño el total era 13,99 €, pero 8,99 + 3,99 = 12,98 €; en strings.xml está corregido.</p>
+</section>
+
+<!-- ============ A6 ============ -->
+<section style="margin-top:6mm">
+<h2>A6 · Inventario de assets</h2>
+<table>
+  <tr><th>Recurso</th><th>Qué es</th><th>Formato</th><th>Carpeta</th><th>Tamaño</th></tr>
+  <tr><td><code>ic_volver</code></td><td>Flecha atrás</td><td>VectorDrawable</td><td>drawable</td><td>391 B</td></tr>
+  <tr><td><code>ic_eliminar</code></td><td>Papelera</td><td>VectorDrawable</td><td>drawable</td><td>403 B</td></tr>
+  <tr><td><code>ic_inicio</code></td><td>Casa (barra inferior)</td><td>VectorDrawable</td><td>drawable</td><td>703 B</td></tr>
+  <tr><td><code>ic_favoritos</code></td><td>Corazón (barra inferior)</td><td>VectorDrawable</td><td>drawable</td><td>583 B</td></tr>
+  <tr><td><code>ic_perfil</code></td><td>Persona (barra inferior)</td><td>VectorDrawable</td><td>drawable</td><td>722 B</td></tr>
+  <tr><td><code>bg_cabecera</code></td><td>Rectángulo menta de la cabecera</td><td>Shape (XML)</td><td>drawable</td><td>300 B</td></tr>
+  <tr><td><code>img_camiseta_nino</code></td><td>Foto de la camiseta</td><td>WebP con pérdida (calidad 75 %)</td><td>drawable-xxhdpi</td><td>234 × 318 px · 5.444 B</td></tr>
+  <tr><td><code>inter_regular</code>, <code>inter_medium</code>, <code>inter_semibold</code></td><td>Fuente Inter en tres pesos (Google Fonts, licencia OFL)</td><td>TTF + familia <code>inter.xml</code></td><td>font</td><td>≈ 325 KB cada una</td></tr>
+</table>
+
+<h3>Decisiones</h3>
+<ul style="margin:0 0 2mm; padding-left:5mm">
+  <li><b>Iconos como vectores.</b> Un VectorDrawable se ve nítido en cualquier densidad con un solo archivo de menos de 1 KB, y su color sale de <code>colors.xml</code>.</li>
+  <li><b>Foto en WebP y en una sola densidad.</b> La foto se ve a 78 × 106 dp. En xxhdpi (×3) son 234 × 318 px, y Android la reduce para las densidades menores. Pesaba 88.295 B en PNG y 5.444 B en WebP, un 94 % menos.</li>
+  <li><b>Fondo de la cabecera como drawable.</b> El rectángulo no es una imagen, sino una forma XML con el color y el radio de la ficha.</li>
+</ul>
+</section>
+
+<!-- ============ CAPTURA ============ -->
+<section class="seccion">
+<h2>Captura del emulador</h2>
+<p>La app compila y se ejecuta en el emulador Medium Phone (1080 × 2400, API 37). Para comprobar los recursos, la pantalla usa los colores, textos, estilos, fuentes, iconos y la foto de las actividades A5 y A6.</p>
+<div class="captura">
+  <figure><img src="figma_carrito.png" alt="Diseño en Figma"><figcaption>Diseño en Figma</figcaption></figure>
+  <figure><img src="captura_emulador.png" alt="App en el emulador"><figcaption>App en ejecución</figcaption></figure>
+</div>
+</section>
+
+<!-- ============ A7 ============ -->
+<section class="reflexion" style="margin-top:7mm">
+<h2>A7 · Reflexión</h2>
+<p><b>¿Qué decisión del análisis o de la preparación en Figma te ha resultado más difícil? ¿Por qué?</b><br>
+Lo más difícil fue decidir qué capas se programan y cuáles no. En Figma la cabecera y el botón son un rectángulo con un texto encima, y al principio pensaba hacer dos vistas. Al analizarlo vi que en Android es una sola: el rectángulo pasa a ser el fondo y la sombra un atributo de elevación. También me costó la tipografía. Al revisar los textos descubrí que todos tenían el mismo estilo, así que tuve que crear una jerarquía de tres (título, destacado y cuerpo) para que la pantalla se lea mejor.</p>
+
+<p><b>Si mañana el cliente modifica el color principal, ¿qué tendrías que cambiar? ¿Y si no hubieras usado recursos?</b><br>
+Con recursos solo cambio una línea, el valor de <code>color_primario</code> en <code>colors.xml</code>, y se actualizan a la vez el botón, el tema y cualquier vista que lo use. Sin recursos tendría que buscar el código #AFF4C6 en todos los layouts y estilos y cambiarlo uno a uno, con el riesgo de olvidar alguno y que la app quede con colores distintos.</p>
+
+<p><b>¿Cuánto ocupaba tu imagen en PNG y cuánto en WebP? ¿Qué conclusión sacas?</b><br>
+En PNG ocupaba 88.295 bytes (86,2 KB) y en WebP 5.444 bytes (5,3 KB): unas 16 veces menos (un 94 % menos), y a ese tamaño no se nota la diferencia. Mi conclusión es que las fotos deben ir en WebP y solo en la densidad necesaria, porque así el APK y la descarga son mucho más ligeros sin perder calidad visible.</p>
+</section>
+
+</body>
+</html>
